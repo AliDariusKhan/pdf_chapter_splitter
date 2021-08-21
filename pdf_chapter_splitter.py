@@ -13,7 +13,14 @@ def get_chapters(file_pdf, file_destinations, prev_chap_start=0, prev_chap_title
             chap_start = file_pdf.getDestinationPageNumber(destination)
             chapters[prev_chap_title] = range(prev_chap_start, chap_start)            
             prev_chap_start = chap_start
-            prev_chap_title = destination.title
+            prev_chap_title_list = []
+            for char in destination.title:
+                try:
+                    if char.encode('ascii') and char != '/':
+                        prev_chap_title_list.append(char)
+                except:
+                    pass
+            prev_chap_title = ''.join(prev_chap_title_list)
         else:
             new_chapters, prev_chap_start, prev_chap_title = get_chapters(file_pdf, 
                                                                           destination, 
