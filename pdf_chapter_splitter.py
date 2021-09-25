@@ -3,7 +3,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 file_pdf = PdfFileReader('file.pdf')
 file_destinations = file_pdf.getOutlines()
-files_output = '/destination_folder/'
+files_output = ''
 
 def get_chapters(file_pdf, 
                  file_destinations, 
