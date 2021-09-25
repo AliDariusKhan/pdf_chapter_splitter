@@ -3,7 +3,6 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 file_pdf = PdfFileReader('file.pdf')
 file_destinations = file_pdf.getOutlines()
-files_output = ''
 
 def get_chapters(file_pdf, 
                  file_destinations, 
@@ -39,7 +38,7 @@ def write_chapters(file_pdf, files_output, chapters):
     for chap_title, page_range in chapters.items():
         for page_no in page_range:
             writer.addPage(file_pdf.getPage(page_no))
-        with open(files_output + chap_title + '.pdf', 'wb') as output_chap:
+        with open(chap_title + '.pdf', 'wb') as output_chap:
             writer.write(output_chap)
         writer = PdfFileWriter()
 
