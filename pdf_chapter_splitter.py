@@ -5,7 +5,12 @@ file_pdf = PdfFileReader('file.pdf')
 file_destinations = file_pdf.getOutlines()
 files_output = '/destination_folder/'
 
-def get_chapters(file_pdf, file_destinations, prev_chap_start=0, prev_chap_title='Front'):
+def get_chapters(file_pdf, 
+                 file_destinations, 
+                 depth=float('inf'),
+                 prev_chap_start=0, 
+                 prev_chap_title='Front',  
+                 indentation=0):
     chapters = OrderedDict()
     total_page_no = file_pdf.getNumPages()
     for destination in file_destinations:
@@ -15,11 +20,14 @@ def get_chapters(file_pdf, file_destinations, prev_chap_start=0, prev_chap_title
             prev_chap_start = chap_start
             prev_chap_title = ''.join([char for char in destination.title
                                        if ord(char) < 128 and char != '/'])
-        else:
+        elif indentation < depth:
             new_chapters, prev_chap_start, prev_chap_title = get_chapters(file_pdf, 
                                                                           destination, 
+                                                                          depth,
                                                                           prev_chap_start, 
-                                                                          prev_chap_title)
+                                                                          prev_chap_title,
+                                                                          indentation + 1)
+            
             chapters.update(new_chapters)
     chapters[prev_chap_title] = range(prev_chap_start, total_page_no)
     return chapters, prev_chap_start, prev_chap_title
