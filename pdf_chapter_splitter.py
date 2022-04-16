@@ -1,7 +1,12 @@
+import sys
+!{sys.executable} -m pip install PyPDF2
+
 from collections import OrderedDict
 from PyPDF2 import PdfFileReader, PdfFileWriter
+import PyPDF2
 
-file_pdf = PdfFileReader('file.pdf')
+file_location = 'file.pdf'
+file_pdf = PdfFileReader(file_location)
 file_destinations = file_pdf.getOutlines()
 
 def get_chapters(file_pdf, 
@@ -31,15 +36,15 @@ def get_chapters(file_pdf,
     chapters[prev_chap_title] = range(prev_chap_start, total_page_no)
     return chapters, prev_chap_start, prev_chap_title
 
-chapters, _, _ = get_chapters(file_pdf, file_destinations)
+chapters, _, _ = get_chapters(file_pdf, file_destinations, 0)
 
-def write_chapters(file_pdf, files_output, chapters):
-    writer = PdfFileWriter()
+def write_chapters(file_location, chapters):
     for chap_title, page_range in chapters.items():
         for page_no in page_range:
+            file_pdf = PdfFileReader(file_location)
+            writer = PdfFileWriter()
             writer.addPage(file_pdf.getPage(page_no))
-        with open(chap_title + '.pdf', 'wb') as output_chap:
-            writer.write(output_chap)
-        writer = PdfFileWriter()
+            with open(chap_title + '.pdf', 'wb') as output_chap:
+                writer.write(output_chap)
 
-write_chapters(file_pdf, files_output, chapters)
+write_chapters(file_location, chapters)
